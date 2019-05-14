@@ -1,12 +1,24 @@
 \documentclass[12pt,onecolumn,a4paper]{article}
-\usepackage{epsfig,graphicx,subfigure,amsthm,amsmath}
+\usepackage{epsfig,graphicx,amsthm,amsmath}
 \usepackage{color,xcolor}
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
 \usepackage{tikz}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{xepersian}
 \settextfont[Scale=1.2]{XB Zar}
 \setlatintextfont[Scale=1]{Times New Roman}
+
+\pgfplotstableread[col sep = comma]{gibbs.csv}\gibbs
+\pgfplotstableread{
+-1 0
+-1 -1
+0 -1
+0 1
+1 1
+1 0
+}\gibbsref
 
 \begin{document}
 \title{توجیه وجود مثال‌های خصمانه \\ و انتقال‌پذیری آن‌ها} 
@@ -41,7 +53,7 @@ $P_n(x)$
 \end{equation*}
 طبق این قضیه، طبیعی است که انتظار داشته باشیم که با افزایش 
 $n$
-به تقریب دقیق‌تری از تابع مورد نظر دست یابیم. با این وجود، ممکن است که چندجمله‌ای‌هایی که انتخاب شده‌اند خاصیت همگرایی یکپارچه را نداشته باشند. توجه کنید که قضیه‌ی تقریب وایرشتراس فقط وجود این چندجمله‌ای را تضمین می‌کند، و مسیری برای یافتن این چندجمله‌ای معرفی نمی‌کند. در واقع، چندجمله‌ای‌هایی که به این صورت ساخته می‌شود ممکن است با افزایش درجه‌ی چندجمله‌ای واگرا شوند. این مشکل به صورت الگوهای نوسانی بروز کرده که در نزدیکی نقاط درون‌یابی انتهایی بازه افزایش می‌یابد. شناسایی این پدیده را به  کارل رونگه
+به تقریب دقیق‌تری از تابع مورد نظر دست یابیم. با این وجود، ممکن است که چندجمله‌ای‌هایی که انتخاب شده‌اند خاصیت همگرایی یکپارچه را نداشته باشند. توجه کنید که قضیه‌ی تقریب وایرشتراس فقط وجود این چندجمله‌ای را تضمین می‌کند، و مسیری برای یافتن این چندجمله‌ای مشخص نمی‌کند. در واقع، چندجمله‌ای‌هایی که به این صورت ساخته می‌شوند ممکن است با افزایش درجه‌ی چندجمله‌ای واگرا شوند. این مشکل به صورت الگوهای نوسانی بروز کرده که در نزدیکی نقاط درون‌یابی انتهایی بازه افزایش می‌یابد. شناسایی این پدیده را به  کارل رونگه
 \LTRfootnote{Carl David Tolme Runge}،
 ریاضیدان آلمانی، منتصب می‌کنند.
 
@@ -61,13 +73,46 @@ $[1,-1]$
 $n$ 
  به صورت بیکران افرایش می‌یابد.
 
+پدیده‌ی رونگه هنگام درون‌یابی با استفاده از پایه‌های تک‌جمله‌ای
+\LTRfootnote{Monomial basis} 
+بروز پیدا می‌کند. در مقابل، اگر از توابع پایه‌ی مثلثاتی، مثلا توابع پایه‌ی چبیشف، برای تشکیل چندجمله‌ای درون‌یاب استفاده کنیم، با مشکل مشابهی مواجه می‌شویم. این مشکل  با نام پدیده‌ی گیبس
+\LTRfootnote{Gibbs phenomenon} 
+شناخته می‌شود. پدیده‌ی گیبس باعث به وجود آمدن نوساناتی در نزدیکی ناپیوستگی‌های تابع شده و این امر موجب فراجهش
+\LTRfootnote{overshoot} 
+در این نقاط می‌شود. در شکل 
+\ref{fig:runge_gibbs} 
+این دو پدیده با مثال‌هایی نشان داده‌ شده‌اند.
+
  \begin{figure}
-     \begin{tikzpicture}
-        \begin{axis}[xmin=-1,xmax=1,xmin=-1.2,xmax=1.2,samples=100]
-            \addplot[domain=-1:1,blue,dashed](x,1/(1+25*x*x));
-        \end{axis}
-     \end{tikzpicture}
- \end{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.8]
+            \begin{axis}[xmin=-1,xmax=1,xmin=-1.2,xmax=1.2,samples=100]
+                \addplot[domain=-1:1,blue,dashed]{1/(1+25*x*x)};
+                \addplot[domain=-1:1,red,solid]{16.545674722429712 * x*x*x*x*x*x*x*x*x*x + 8.851286807773627e-13 * x*x*x*x*x*x*x*x*x + -12.079377458718012 * x*x*x*x*x*x*x*x + -1.6319051537287015e-12 * x*x*x*x*x*x*x + -22.778903788331114 * x*x*x*x*x*x + 8.747268893200492e-13 * x*x*x*x*x + 25.348331583973515 * x*x*x*x + -1.4087385060936399e-13 * x*x*x + -7.854564043148674 * x*x + 6.6005027351349585e-15 * x + 0.8573005222561162};
+            \end{axis}
+         \end{tikzpicture}
+        \caption{پدیده‌ی رونگه}
+        \label{fig:runge}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.8]
+            \begin{axis}[xmin=-1,xmax=1,xmin=-1.2,xmax=1.2,samples=100]
+                \addplot[mark=none,blue,dashed] table{\gibbsref};
+                \addplot[mark=none,red,solid] table{\gibbs};
+            \end{axis}
+         \end{tikzpicture}
+        \caption{پدیده‌ی گیبس}
+        \label{fig:gibbs}
+    \end{subfigure}
+       \caption{دو پدیده‌ی رونگه و گیبس. در هر دو نمودار خم آبی تابع هدف و خم قرمز تقریب متناظر با آن تابع می‌باشد. (آ) تابع رونگه و تقریب آن توسط یک چندجمله‌ای درجه 10. (ب) تابع پله‌ای و تقریب آن با استفاده از 30 جمله‌ی اول سری فوریه‌ی متناظر آن.}
+       \label{fig:runge_gibbs}
+\end{figure}
+
+
 
 \section{نتایج}
 نتایج.
